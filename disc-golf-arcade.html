@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#173f2b" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@500;600&family=Newsreader:opsz,wght@6..72,500;6..72,650&display=swap" rel="stylesheet">
+  <title>Disc Golf Arcade</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #edf0e6;
+      --paper: #f7f6ee;
+      --ink: #14251b;
+      --muted: #4d6255;
+      --line: #b9c4b8;
+      --forest: #173f2b;
+      --forest-2: #285c3d;
+      --orange: #ed6a2c;
+      --yellow: #f0c64f;
+      --sky: #b9d9e3;
+      --white: #fffef7;
+      --shadow: 0 18px 50px rgba(17, 44, 29, .13);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1812;
+        --paper: #17251c;
+        --ink: #f3f1e5;
+        --muted: #b9c9bb;
+        --line: #3e5545;
+        --forest: #8ec49b;
+        --forest-2: #2f6a46;
+        --orange: #ff8247;
+        --yellow: #f2ca5e;
+        --sky: #547681;
+        --white: #f8f5e8;
+        --shadow: 0 20px 60px rgba(0, 0, 0, .32);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 0;
+      background:
+        radial-gradient(circle at 12% 4%, color-mix(in srgb, var(--sky) 32%, transparent) 0 16rem, transparent 16.1rem),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .page {
+      width: min(1180px, calc(100% - 34px));
+      margin-inline: auto;
+      padding: 30px 0 70px;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 510px;
+      overflow: hidden;
+      border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      padding: clamp(36px, 6vw, 78px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .scoreline {
+      margin: 0 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--forest);
+      font: 600 12px/1 "IBM Plex Mono", monospace;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .scoreline::before {
+      content: "";
+      width: 26px;
+      height: 2px;
+      background: var(--orange);
+    }
+
+    h1 {
+      max-width: 640px;
+      margin: 0;
+      font: 400 clamp(54px, 7.2vw, 105px)/.86 "Archivo Black", sans-serif;
+      letter-spacing: -.055em;
+      text-wrap: balance;
+    }
+    h1 em {
+      display: block;
+      color: var(--orange);
+      font-style: normal;
+    }
+    .lede {
+      max-width: 570px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: clamp(19px, 2vw, 24px);
+      line-height: 1.35;
+    }
+    .jump {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 34px;
+      padding: 13px 17px;
+      background: var(--forest);
+      color: var(--white);
+      text-decoration: none;
+      font: 600 13px/1 "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .jump svg { transition: transform .2s ease; }
+    .jump:hover svg { transform: translateY(3px); }
+
+    .course-art {
+      position: relative;
+      min-height: 510px;
+      overflow: hidden;
+      background: var(--forest);
+      isolation: isolate;
+    }
+    .course-art::before,
+    .course-art::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+    }
+    .course-art::before {
+      width: 390px;
+      height: 520px;
+      left: -34px;
+      bottom: -170px;
+      background: var(--forest-2);
+      transform: rotate(-16deg);
+    }
+    .course-art::after {
+      width: 300px;
+      height: 600px;
+      right: -130px;
+      top: -70px;
+      border: 44px solid rgba(255,255,255,.07);
+    }
+    .sun {
+      position: absolute;
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      right: 13%;
+      top: 11%;
+      background: var(--yellow);
+    }
+    .flight-path {
+      position: absolute;
+      width: 66%;
+      height: 47%;
+      top: 9%;
+      left: 4%;
+      border-top: 3px dashed rgba(255,255,255,.72);
+      border-radius: 50%;
+      transform: rotate(-11deg);
+    }
+    .disc {
+      position: absolute;
+      z-index: 2;
+      width: 116px;
+      height: 27px;
+      left: 24%;
+      top: 29%;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: inset 0 -6px 0 rgba(86,25,4,.22), 0 12px 24px rgba(0,0,0,.16);
+      transform: rotate(-12deg);
+    }
+    .basket {
+      position: absolute;
+      z-index: 3;
+      right: 19%;
+      bottom: 9%;
+      width: 154px;
+      height: 270px;
+      color: var(--white);
+    }
+    .basket svg { width: 100%; height: 100%; overflow: visible; }
+    .art-caption {
+      position: absolute;
+      z-index: 4;
+      left: 24px;
+      bottom: 21px;
+      color: rgba(255,255,255,.82);
+      font: 500 11px/1.4 "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+
+    .intro-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 24px;
+      margin: 78px 0 28px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .intro-row h2 {
+      margin: 0;
+      font: 400 clamp(35px, 5vw, 63px)/1 "Archivo Black", sans-serif;
+      letter-spacing: -.04em;
+    }
+    .intro-row p {
+      margin: 0 0 4px;
+      color: var(--muted);
+      font: 600 12px/1 "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+    }
+
+    .group-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px 22px;
+      margin: 40px 0 16px;
+    }
+    .group-head:first-of-type { margin-top: 6px; }
+    .group-head h3 {
+      margin: 0;
+      font: 400 clamp(21px, 2.6vw, 29px)/1.1 "Archivo Black", sans-serif;
+      letter-spacing: -.02em;
+    }
+    .group-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .project-list { display: grid; gap: 16px; }
+    .project {
+      position: relative;
+      min-height: 175px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 82px 1fr auto;
+      align-items: center;
+      gap: clamp(20px, 4vw, 48px);
+      padding: clamp(22px, 4vw, 42px);
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+      text-decoration: none;
+      transition: border-color .2s ease, background-color .2s ease, color .2s ease;
+    }
+    .project::after {
+      content: "";
+      position: absolute;
+      width: 165px;
+      height: 165px;
+      right: 90px;
+      border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+      border-radius: 50%;
+      opacity: .55;
+      transition: transform .35s ease;
+    }
+    .project:hover,
+    .project:focus-visible {
+      border-color: var(--forest);
+      background: var(--forest);
+      color: var(--white);
+      outline: none;
+    }
+    .project:hover::after,
+    .project:focus-visible::after { transform: scale(1.3); border-color: rgba(255,255,255,.23); }
+    .project:hover .project-copy p,
+    .project:focus-visible .project-copy p,
+    .project:hover .number,
+    .project:focus-visible .number { color: rgba(255,255,255,.76); }
+    .project:hover .tag,
+    .project:focus-visible .tag { border-color: rgba(255,255,255,.36); color: var(--white); }
+    .project:hover .go,
+    .project:focus-visible .go { background: var(--orange); border-color: var(--orange); transform: translateX(3px); }
+
+    .number {
+      color: var(--muted);
+      font: 600 17px/1 "IBM Plex Mono", monospace;
+    }
+    .project-copy { position: relative; z-index: 2; }
+    .project h3 {
+      margin: 0 0 10px;
+      font: 400 clamp(25px, 3vw, 37px)/1.05 "Archivo Black", sans-serif;
+      letter-spacing: -.03em;
+    }
+    .project-copy p {
+      max-width: 610px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+      transition: color .2s ease;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .tag {
+      padding: 7px 9px;
+      border: 1px solid var(--line);
+      color: var(--forest);
+      font: 600 10px/1 "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+    .go {
+      position: relative;
+      z-index: 2;
+      width: 52px;
+      height: 52px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      transition: transform .2s ease, background-color .2s ease, border-color .2s ease;
+    }
+
+    .project.featured {
+      min-height: 250px;
+      background: var(--forest);
+      color: var(--white);
+      border-color: var(--forest);
+    }
+    .project.featured .number,
+    .project.featured .project-copy p { color: rgba(255,255,255,.76); }
+    .project.featured .tag { color: var(--white); border-color: rgba(255,255,255,.34); }
+    .project.featured .go { border-color: rgba(255,255,255,.42); }
+    .project.featured::before {
+      content: "Play";
+      position: absolute;
+      right: 112px;
+      top: 50%;
+      transform: translateY(-52%);
+      color: rgba(255,255,255,.045);
+      font: 400 160px/1 "Archivo Black", sans-serif;
+      letter-spacing: -.08em;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-top: 52px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font: 500 12px/1.5 "IBM Plex Mono", monospace;
+    }
+    .mini-disc {
+      display: inline-block;
+      width: 32px;
+      height: 9px;
+      margin-left: 9px;
+      border-radius: 50%;
+      background: var(--orange);
+      vertical-align: middle;
+    }
+
+    @media (max-width: 780px) {
+      .page { width: min(100% - 20px, 620px); padding-top: 10px; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-copy { min-height: 430px; padding: 42px 28px; }
+      .course-art { min-height: 320px; }
+      .basket { height: 220px; width: 126px; bottom: 5%; }
+      .disc { left: 21%; top: 24%; width: 92px; }
+      .intro-row { margin-top: 56px; grid-template-columns: 1fr; gap: 10px; }
+      .project, .project.featured {
+        min-height: 0;
+        grid-template-columns: 44px 1fr;
+        gap: 12px;
+        padding: 24px 20px;
+      }
+      .project::after, .project.featured::before { display: none; }
+      .number { align-self: start; padding-top: 6px; }
+      .go { grid-column: 2; width: 44px; height: 44px; margin-top: 6px; }
+      footer { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 410px) {
+      h1 { font-size: 48px; }
+      .hero-copy { padding: 36px 22px; }
+      .course-art { min-height: 270px; }
+      .project { grid-template-columns: 34px 1fr; padding-inline: 17px; }
+      .project-copy p { font-size: 17px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="scoreline">Ten projects · one bag</p>
+        <h1 id="hero-title">Choose your <em>lie.</em></h1>
+        <p class="lede">Games, tools, and custom builds for people who think a perfect afternoon starts at the first tee.</p>
+        <a class="jump" href="#projects">Explore the course
+          <svg width="16" height="18" viewBox="0 0 16 18" fill="none" aria-hidden="true"><path d="M8 1v14M2.5 10.5 8 16l5.5-5.5" stroke="currentColor" stroke-width="2"/></svg>
+        </a>
+      </div>
+      <div class="course-art" aria-hidden="true">
+        <span class="sun"></span>
+        <span class="flight-path"></span>
+        <span class="disc"></span>
+        <div class="basket">
+          <svg viewBox="0 0 160 280" fill="none">
+            <path d="M80 16v239" stroke="currentColor" stroke-width="7"/>
+            <path d="M18 56h124" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>
+            <path d="M27 64 45 147M52 64l10 83M80 64v83M108 64l-10 83M133 64l-18 83" stroke="currentColor" stroke-width="3.5"/>
+            <path d="M32 147h96l-17 43H49l-17-43Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/>
+            <path d="M23 147h114" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>
+            <path d="M46 258h68" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="art-caption">Est. somewhere near the first available tree</span>
+      </div>
+    </section>
+
+    <section id="projects" aria-labelledby="projects-title">
+      <header class="intro-row">
+        <h2 id="projects-title">On the card</h2>
+        <p>Tap a project to launch</p>
+      </header>
+
+      <div class="group-head">
+        <h3>The round — three ways to play it</h3>
+        <p>Same game underneath, three looks: the original pixel build, the low-poly restyle, and a Thanksgiving harvest edition.</p>
+      </div>
+
+      <div class="project-list">
+        <a class="project featured" href="https://acerbinky.github.io/pixel-disc-golf/" target="_blank" rel="noopener noreferrer" aria-label="Launch Pixel Disc Golf">
+          <span class="number">01</span>
+          <div class="project-copy">
+            <h3>Pixel Disc Golf</h3>
+            <p>Play a full nine-hole round through trees, water, paths, and mandatory lines. Pick a disc, pull back, and let it fly.</p>
+            <div class="meta"><span class="tag">Game</span><span class="tag">Original version</span><span class="tag">9 holes</span><span class="tag">Mobile ready</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+
+        <a class="project" href="https://acerbinky.github.io/low-poly-disc-golf/" target="_blank" rel="noopener noreferrer" aria-label="Launch Low Poly Disc Golf">
+          <span class="number">02</span>
+          <div class="project-copy">
+            <h3>Low Poly Disc Golf</h3>
+            <p>The same round rebuilt in low-poly style — seeded 9 or 18 holes across three biomes, with OB and mando rules and a full scorecard.</p>
+            <div class="meta"><span class="tag">Game</span><span class="tag">Low-poly version</span><span class="tag">9 / 18 holes</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+
+        <a class="project" href="https://acerbinky.github.io/thanksgiving-disc-golf/" target="_blank" rel="noopener noreferrer" aria-label="Launch Thanksgiving Disc Golf">
+          <span class="number">03</span>
+          <div class="project-copy">
+            <h3>Thanksgiving Disc Golf</h3>
+            <p>The harvest edition — a golden autumn course with turkeys and pilgrims on the path, pumpkins, falling leaves, and a basket woven from corn stalks. Gobble Mode included.</p>
+            <div class="meta"><span class="tag">Game</span><span class="tag">Thanksgiving edition</span><span class="tag">Gobble Mode</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+      </div>
+
+      <div class="group-head">
+        <h3>Tools, guides &amp; the rest of the bag</h3>
+        <p>Design tools, flight guides, a photo matcher, and one feral 3D brawler.</p>
+      </div>
+
+      <div class="project-list">
+        <a class="project" href="https://acerbinky.github.io/bag-tag-builder/" target="_blank" rel="noopener noreferrer" aria-label="Launch Bag Tag Builder">
+          <span class="number">04</span>
+          <div class="project-copy">
+            <h3>Bag Tag Builder</h3>
+            <p>Design a custom disc golf bag tag with your size, material, color, artwork, and numbering.</p>
+            <div class="meta"><span class="tag">Design tool</span><span class="tag">Custom tags</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+
+        <a class="project" href="https://acerbinky.github.io/shake-dice-roller/" target="_blank" rel="noopener noreferrer" aria-label="Launch Shake Dice Roller">
+          <span class="number">05</span>
+          <div class="project-copy">
+            <h3>Shake Dice Roller</h3>
+            <p>Shake your phone to call the disc and shot. Putter roller? Fairway tomahawk? The dice have spoken.</p>
+            <div class="meta"><span class="tag">Game</span><span class="tag">Shake to roll</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+
+        <a class="project" href="https://acerbinky.github.io/disc-chart/" target="_blank" rel="noopener noreferrer" aria-label="Launch Disc Chart">
+          <span class="number">06</span>
+          <div class="project-copy">
+            <h3>Disc Chart</h3>
+            <p>See the flight before the throw. Compare turn, fade, release angle, and estimated distance on a true-scale chart.</p>
+            <div class="meta"><span class="tag">Flight guide</span><span class="tag">True scale</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+
+        <a class="project" href="https://acerbinky.github.io/flight-lab/" target="_blank" rel="noopener noreferrer" aria-label="Launch Flight Lab">
+          <span class="number">07</span>
+          <div class="project-copy">
+            <h3>Flight Lab</h3>
+            <p>Experiment with throw speed and watch how power changes a disc’s turn, fade, and total distance.</p>
+            <div class="meta"><span class="tag">Experiment</span><span class="tag">Throw speed</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+
+        <a class="project" href="https://muse.ai/s/pro-disc-golfer-look-alike-xal6xkxsxoxbxxxz7s/5MPeSIBXXx1AyzdG07QsKKq2XwuLJ3QLtpyZntG0jFQ" target="_blank" rel="noopener noreferrer" aria-label="Launch Pro Disc Golfer Look-Alike">
+          <span class="number">08</span>
+          <div class="project-copy">
+            <h3>Pro Disc Golfer Look-Alike</h3>
+            <p>Drop in a photo, answer four quick questions, and spin through 20 of the world's best disc golfers to find your closest match.</p>
+            <div class="meta"><span class="tag">Photo match</span><span class="tag">Quiz</span><span class="tag">20 pros</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+
+        <a class="project" href="https://acerbinky.github.io/pnw-chain-finder/" target="_blank" rel="noopener noreferrer" aria-label="Launch PNW Chain Finder">
+          <span class="number">09</span>
+          <div class="project-copy">
+            <h3>PNW Chain Finder</h3>
+            <p>Every disc golf course in Oregon &amp; Washington — 420 courses, searchable with ratings and conditions.</p>
+            <div class="meta"><span class="tag">Course directory</span><span class="tag">Oregon &amp; Washington</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+
+        <a class="project" href="https://muse.ai/s/chainbonk-xto6xkxsqxkxncex0/7GmDNjIKJTX9tFL-_UxMylsjulrUrwZzV4Tbz50flNE" target="_blank" rel="noopener noreferrer" aria-label="Launch Chainbonk">
+          <span class="number">10</span>
+          <div class="project-copy">
+            <h3>Chainbonk</h3>
+            <p>The course has gone feral. Battle geese, squirrels, and cargo-short dads in a 3D survivors-like — survive 9 holes, charge the basket shrines, and bonk the boss.</p>
+            <div class="meta"><span class="tag">Game</span><span class="tag">3D survivors-like</span><span class="tag">9 holes</span></div>
+          </div>
+          <span class="go" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16 16 4M7 4h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <span>Built for the fairway, tested in the rough.</span>
+      <span>Ten ways to play <i class="mini-disc" aria-hidden="true"></i></span>
+    </footer>
+  </main>
+</body>
+</html>
